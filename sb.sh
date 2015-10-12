@@ -199,18 +199,26 @@ IOPing sequential: \`./ioping -RL . 2>&1\`
 IOPing cached: \`./ioping -RC . 2>&1\`" >> ../sb-output.log
 cd ..
 
+echo "Running sysbench benchmark..."
+cd $SYS_BENCH_DIR
+sh ./autogen.sh > /dev/null 2>&1
+./configure > /dev/null 2>&1
+make > /dev/null 2>&1
+#make >> ../sb-output.log 2>&1
+cd ..
+
 echo "Running FIO benchmark..."
 cd $FIO_DIR
 make  > /dev/null 2>&1
 #make >> ../sb-output.log 2>&1
 
-cd ..
-echo "Running sysbench benchmark..."
-cd $SYS_BENCH_DIR
-./autogen.sh > /dev/null 2>&1
-./configure > /dev/null 2>&1
-make > /dev/null 2>&1
-#make >> ../sb-output.log 2>&1
+# cd ..
+# echo "Running sysbench benchmark..."
+# cd $SYS_BENCH_DIR
+# sh ./autogen.sh > /dev/null 2>&1
+# ./configure > /dev/null 2>&1
+# make > /dev/null 2>&1
+# #make >> ../sb-output.log 2>&1
 
 echo "FIO random reads:
 \`./fio reads.ini 2>&1\`
@@ -258,19 +266,20 @@ echo "Pings (cachefly.cachefly.net): \`ping -c 10 cachefly.cachefly.net 2>&1\`" 
 #sysbench
 echo "Running sysbench benchmark..."
 cd $SYS_BENCH_DIR
+pwd
 #test cpu
 ./sysbench/sysbench --test=cpu --cpu-max-prime=2000 run >> ../sb-output.log 2>&1
 #test thread
 ./sysbench/sysbench --test=threads --num-threads=500 --thread-yields=100 --thread-locks=4 run >> ../sb-output.log 2>&1
 #test mutex 
-./sysbench/sysbench --test=mutex –num-threads=100 –mutex-num=1000 –mutex-locks=100000 –mutex-loops=10000 run >> ../sb-output.log 2>&1
+./sysbench/sysbench --test=mutex --num-threads=100 --mutex-num=1000 --mutex-locks=100000 --mutex-loops=10000 run >> ../sb-output.log 2>&1
 #test memory
 ./sysbench/sysbench --test=memory --memory-block-size=8k --memory-total-size=200M run >> ../sb-output.log 2>&1
 cd ..
 
 echo "Running UnixBench benchmark..."
 cd $UNIX_BENCH_DIR
-./Run -c 1 -c `grep -c processor /proc/cpuinfo` >> ../sb-output.log 2>&1
+#./Run -c 1 -c `grep -c processor /proc/cpuinfo` >> ../sb-output.log 2>&1
 cd ..
 
 RESPONSE=\`curl -s -F "upload[upload_type]=unix-bench-output" -F "upload[data]=<sb-output.log" -F "upload[key]=$EMAIL|$HOST|$PLAN|$COST" -F "private=$PRIVATE" $UPLOAD_ENDPOINT\`
@@ -280,7 +289,7 @@ echo "Response: \$RESPONSE"
 echo "Completed! Your benchmark has been queued & will be delivered in a jiffy."
 kill -15 \`ps -p \$\$ -o ppid=\` &> /dev/null
 
-rm -rf ../sb-bench
+#rm -rf ../sb-bench
 rm -rf ~/.sb-pid
 
 exit 0
