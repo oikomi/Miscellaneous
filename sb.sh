@@ -66,6 +66,8 @@ requires_command 'gcc'
 requires_command 'make'
 requires_command 'curl'
 requires_command 'traceroute'
+#zip
+requires_command 'zip'
 
 if [ "`whoami`" != "root" ]; then
   SUDO='sudo'
@@ -82,7 +84,13 @@ fi
 
 PID=`cat ~/.sb-pid 2>/dev/null`
 UNIX_BENCH_VERSION=5.1.3
+
+SYS_BENCH_VERSION=0.5
+
 UNIX_BENCH_DIR=UnixBench-$UNIX_BENCH_VERSION
+
+SYS_BENCH_DIR=sysbench-$SYS_BENCH_VERSION
+
 IOPING_VERSION=0.6
 IOPING_DIR=ioping-$IOPING_VERSION
 FIO_VERSION=2.0.9
@@ -103,6 +111,8 @@ require_download FIO fio-$FIO_DIR http://${TOOLS_HOST}/fio-$FIO_VERSION.tar.gz
 require_download IOPing $IOPING_DIR http://${TOOLS_HOST}/ioping-$IOPING_VERSION.tar.gz
 #require_download UnixBench $UNIX_BENCH_DIR https://github.com/Crowd9/Benchmark/raw/master/UnixBench$UNIX_BENCH_VERSION-patched.tgz
 require_download UnixBench $UNIX_BENCH_DIR http://${TOOLS_HOST}/UnixBench$UNIX_BENCH_VERSION-patched.tgz
+
+require_download sysbench $SYS_BENCH_DIR http://${TOOLS_HOST}/sysbench-$SYS_BENCH_VERSION.tar.gz
 
 mv -f UnixBench $UNIX_BENCH_DIR 2>/dev/null
 
@@ -181,7 +191,8 @@ rm -f sb-io-test
 
 echo "Running IOPing I/O benchmark..."
 cd $IOPING_DIR
-make >> ../sb-output.log 2>&1
+#make >> ../sb-output.log 2>&1
+make  > /dev/null 2>&1
 echo "IOPing I/O: \`./ioping -c 10 . 2>&1 \`
 IOPing seek rate: \`./ioping -RD . 2>&1 \`
 IOPing sequential: \`./ioping -RL . 2>&1\`
@@ -190,7 +201,16 @@ cd ..
 
 echo "Running FIO benchmark..."
 cd $FIO_DIR
-make >> ../sb-output.log 2>&1
+make  > /dev/null 2>&1
+#make >> ../sb-output.log 2>&1
+
+cd ..
+echo "Running sysbench benchmark..."
+cd $SYS_BENCH_DIR
+./autogen.sh > /dev/null 2>&1
+./configure > /dev/null 2>&1
+make > /dev/null 2>&1
+#make >> ../sb-output.log 2>&1
 
 echo "FIO random reads:
 \`./fio reads.ini 2>&1\`
@@ -234,6 +254,18 @@ echo "Traceroute (cachefly.cachefly.net): \`traceroute cachefly.cachefly.net 2>&
 echo "Running ping benchmark..."
 echo "Pings (cachefly.cachefly.net): \`ping -c 10 cachefly.cachefly.net 2>&1\`" >> sb-output.log
 
+
+#sysbench
+echo "Running sysbench benchmark..."
+cd $SYS_BENCH_DIR
+#test cpu
+./sysbench/sysbench --test=cpu --cpu-max-prime=2000 run >> ../sb-output.log 2>&1
+#test thread
+./sysbench/sysbench --test=threads --num-threads=500 --thread-yields=100 --thread-locks=4 run >> ../sb-output.log 2>&1
+#test mutex 
+./sysbench/sysbench –test=mutex –num-threads=100 –mutex-num=1000 –mutex-locks=100000 –mutex-loops=10000 run >> ../sb-output.log 2>&1
+cd ..
+
 echo "Running UnixBench benchmark..."
 cd $UNIX_BENCH_DIR
 ./Run -c 1 -c `grep -c processor /proc/cpuinfo` >> ../sb-output.log 2>&1
@@ -245,6 +277,7 @@ echo "Uploading results..."
 echo "Response: \$RESPONSE"
 echo "Completed! Your benchmark has been queued & will be delivered in a jiffy."
 kill -15 \`ps -p \$\$ -o ppid=\` &> /dev/null
+
 rm -rf ../sb-bench
 rm -rf ~/.sb-pid
 
