@@ -263,7 +263,7 @@ cd $SYS_BENCH_DIR
 #test thread
 ./sysbench/sysbench --test=threads --num-threads=500 --thread-yields=100 --thread-locks=4 run >> ../sb-output.log 2>&1
 #test mutex 
-./sysbench/sysbench –test=mutex –num-threads=100 –mutex-num=1000 –mutex-locks=100000 –mutex-loops=10000 run >> ../sb-output.log 2>&1
+./sysbench/sysbench --test=mutex –num-threads=100 –mutex-num=1000 –mutex-locks=100000 –mutex-loops=10000 run >> ../sb-output.log 2>&1
 #test memory
 ./sysbench/sysbench --test=memory --memory-block-size=8k --memory-total-size=200M run >> ../sb-output.log 2>&1
 cd ..
