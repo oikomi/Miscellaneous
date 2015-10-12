@@ -1,9 +1,9 @@
 #!/bin/bash
-# Copyright (C) 2012 Crowd9 Pty Ltd
+# Copyright (C) 2015 baidu
 
 usage ()
 {
-     echo >&2 "usage: bash $0 'john@example.com' 'MyBox' 'MyProvider.com' [\\\$20/mth]"
+     echo >&2 "usage: bash $0 'example@example.com' 'MyBox' 'MyProvider.com' [\\\$20/mth]"
 }
 
 if [ $# -lt 3 ]
@@ -20,24 +20,13 @@ EMAIL=$3
 COST=$4
 PRIVATE=$5
 
+TOOLS_HOST="127.0.0.1"
+
 echo "
 ###############################################################################
-#               ServerBear (http://serverbear.com) benchmarker                #
+#                              Baidu  benchmarker                             #
 ###############################################################################
-
-This script will:
-  * Download and install packages to run UnixBench
-  * Download and run UnixBench
-  * Upload to ServerBear the UnixBench output and information about this computer
-
-This script has been tested on Ubuntu, Debian, and CentOs (6+).  Running it on other environments may not work correctly.
-
-To improve consistency, we recommend that you stop any services you may be running (e.g. web server, database, etc) to get the environment as close as possible to the original configuration.
-
-WARNING: You run this script entirely at your own risk.
-ServerBear accepts no responsibility for any damage this script may cause.
-
-Please review the code at https://github.com/Crowd9/Benchmark if you have any concerns"
+"
 
 echo "Checking for required dependencies"
 
@@ -109,11 +98,11 @@ function require_download() {
 }
 
 #require_download FIO fio-$FIO_DIR https://github.com/Crowd9/Benchmark/raw/master/fio-$FIO_VERSION.tar.gz
-require_download FIO fio-$FIO_DIR http://127.0.0.1/fio-$FIO_VERSION.tar.gz
+require_download FIO fio-$FIO_DIR http://${TOOLS_HOST}/fio-$FIO_VERSION.tar.gz
 #require_download IOPing $IOPING_DIR https://ioping.googlecode.com/files/ioping-$IOPING_VERSION.tar.gz
-require_download IOPing $IOPING_DIR http://127.0.0.1/ioping-$IOPING_VERSION.tar.gz
+require_download IOPing $IOPING_DIR http://${TOOLS_HOST}/ioping-$IOPING_VERSION.tar.gz
 #require_download UnixBench $UNIX_BENCH_DIR https://github.com/Crowd9/Benchmark/raw/master/UnixBench$UNIX_BENCH_VERSION-patched.tgz
-require_download UnixBench $UNIX_BENCH_DIR http://127.0.0.1/UnixBench$UNIX_BENCH_VERSION-patched.tgz
+require_download UnixBench $UNIX_BENCH_DIR http://${TOOLS_HOST}/UnixBench$UNIX_BENCH_VERSION-patched.tgz
 
 mv -f UnixBench $UNIX_BENCH_DIR 2>/dev/null
 
@@ -167,12 +156,6 @@ echo "
 ###############################################################################
 #                                                                             #
 #             Installation(s) complete.  Benchmarks starting...               #
-#                                                                             #
-#  Running Benchmark as a background task. This can take several hours.       #
-#  ServerBear will email you when it's done.                                  #
-#  You can log out/Ctrl-C any time while this is happening                    #
-#  (it's running through nohup).                                              #
-#                                                                             #
 ###############################################################################
 "
 >sb-output.log
