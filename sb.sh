@@ -115,7 +115,7 @@ require_download UnixBench $UNIX_BENCH_DIR http://${TOOLS_HOST}/UnixBench$UNIX_B
 
 require_download sysbench $SYS_BENCH_DIR http://${TOOLS_HOST}/sysbench-$SYS_BENCH_VERSION.tar.gz
 
-require_download iperf $IPERF_DIR http://${TOOLS_HOST}/iperf-$IPERF-source.tar.gz
+require_download iperf $IPERF_DIR http://${TOOLS_HOST}/iperf-$IPERF_VERSION-source.tar.gz
 
 mv -f UnixBench $UNIX_BENCH_DIR 2>/dev/null
 
