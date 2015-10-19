@@ -290,7 +290,7 @@ cd ..
 #iperf 
 echo "Run iperf"
 cd $IPERF_DIR
-./src/iperf3 -c 3.testdebit.info -i 2
+./src/iperf3 -c 3.testdebit.info -i 2  -m
 
 cd ..
 
