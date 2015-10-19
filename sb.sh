@@ -210,6 +210,12 @@ make > /dev/null 2>&1
 #make >> ../sb-output.log 2>&1
 cd ..
 
+echo "iperf"
+cd $IPERF_DIR
+./configure  > /dev/null 2>&1
+make  > /dev/null 2>&1
+cd ..
+
 echo "Running FIO benchmark..."
 cd $FIO_DIR
 make  > /dev/null 2>&1
