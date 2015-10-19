@@ -286,6 +286,14 @@ pwd
 ./sysbench/sysbench --test=memory --memory-block-size=8k --memory-total-size=200M run >> ../sb-output.log 2>&1
 cd ..
 
+
+#iperf 
+echo "Run iperf"
+cd $IPERF_DIR
+./src/iperf3 -c 3.testdebit.info -i 2
+
+cd ..
+
 echo "Running UnixBench benchmark..."
 cd $UNIX_BENCH_DIR
 #./Run -c 1 -c `grep -c processor /proc/cpuinfo` >> ../sb-output.log 2>&1
