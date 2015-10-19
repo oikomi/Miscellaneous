@@ -90,7 +90,8 @@ SYS_BENCH_VERSION=0.5
 UNIX_BENCH_DIR=UnixBench-$UNIX_BENCH_VERSION
 
 SYS_BENCH_DIR=sysbench-$SYS_BENCH_VERSION
-
+IPERF_VERSION=3.0.11
+IPERF_DIR=iperf-$IPERF_VERSION
 IOPING_VERSION=0.6
 IOPING_DIR=ioping-$IOPING_VERSION
 FIO_VERSION=2.0.9
@@ -113,6 +114,8 @@ require_download IOPing $IOPING_DIR http://${TOOLS_HOST}/ioping-$IOPING_VERSION.
 require_download UnixBench $UNIX_BENCH_DIR http://${TOOLS_HOST}/UnixBench$UNIX_BENCH_VERSION-patched.tgz
 
 require_download sysbench $SYS_BENCH_DIR http://${TOOLS_HOST}/sysbench-$SYS_BENCH_VERSION.tar.gz
+
+require_download iperf $IPERF_DIR http://${TOOLS_HOST}/iperf-$IPERF-source.tar.gz
 
 mv -f UnixBench $UNIX_BENCH_DIR 2>/dev/null
 
