@@ -68,6 +68,7 @@ requires_command 'curl'
 requires_command 'traceroute'
 #zip
 requires_command 'zip'
+requires_command 'libtool'
 
 if [ "`whoami`" != "root" ]; then
   SUDO='sudo'
@@ -202,7 +203,7 @@ IOPing sequential: \`./ioping -RL . 2>&1\`
 IOPing cached: \`./ioping -RC . 2>&1\`" >> ../sb-output.log
 cd ..
 
-echo "Running sysbench benchmark..."
+echo "compile sysbench..."
 cd $SYS_BENCH_DIR
 sh ./autogen.sh > /dev/null 2>&1
 ./configure > /dev/null 2>&1
@@ -210,7 +211,7 @@ make > /dev/null 2>&1
 #make >> ../sb-output.log 2>&1
 cd ..
 
-echo "iperf"
+echo "iperf compile"
 cd $IPERF_DIR
 ./configure  > /dev/null 2>&1
 make  > /dev/null 2>&1
