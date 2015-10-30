@@ -69,6 +69,8 @@ requires_command 'traceroute'
 #zip
 requires_command 'zip'
 requires_command 'libtool'
+requires_command 'libmysqlclient-dev'
+
 
 if [ "`whoami`" != "root" ]; then
   SUDO='sudo'
